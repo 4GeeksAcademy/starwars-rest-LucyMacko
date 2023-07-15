@@ -3,14 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class Users(db.Model):
-    __tablename__ = 'Users'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)    
     password = db.Column(db.String(80), unique=True, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    favourite_characters = db.relationship('FavouriteCharacters', backref='user', lazy=True)
-    favourite_planets = db.relationship('FavouritePlanets', backref='user', lazy=True)
+    favourite_characters = db.relationship('FavouriteCharacters', lazy=True)
+    favourite_planets = db.relationship('FavouritePlanets', lazy=True)
 
     def __repr__(self):
         return self.email
@@ -26,7 +26,7 @@ class Characters(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)    
     gender = db.Column(db.String(250), nullable=False)
-    favourite_character = db.relationship('FavouriteCharacters', backref='characters', lazy=True)    
+    favourite_characters = db.relationship('FavouriteCharacters', lazy=True)    
 
     def __repr__(self):
         return '<Characters %r>' % self.name
@@ -43,7 +43,7 @@ class Planets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     terrain = db.Column(db.String(80), unique=False, nullable=False)
-    favourite_planets= db.relationship('FavouritePlantes', backref='planets', lazy=True)    
+    favourite_planets= db.relationship('FavouritePlanets', lazy=True)    
 
     def __repr__(self):
         return '<Planets %r>' % self.name
@@ -57,7 +57,7 @@ class Planets(db.Model):
 class FavouriteCharacters(db.Model):
     __tablename__='favouritecharacters'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     character_id= db.Column(db.Integer, db.ForeignKey('characters.id'), nullable=False)    
 
     def __repr__(self):
@@ -72,8 +72,8 @@ class FavouriteCharacters(db.Model):
 class FavouritePlanets(db.Model):
     __tablename__='favouriteplanets'
     id = db.Column(db.Integer, primary_key=True)
-    planet_id = db.Column(db.Interger, db.ForeignKey('planets.id'))
-    user_id = db.Column(db.Interger, db.ForeignKey('user.id'), nullable=False)    
+    planet_id = db.Column(db.Integer, db.ForeignKey('planets.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)    
 
     def __repr__(self):
         return str(self.id)

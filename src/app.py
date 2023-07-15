@@ -65,7 +65,7 @@ def get_all_characters():
 
     return jsonify(all_characters), 200
 
-@app.route('/characters/<init:id', methods=['GET'])
+@app.route('/characters/<int:id>', methods=['GET'])
 def get_single_character(id):
 
     character = Characters.query.get(id)
@@ -85,7 +85,7 @@ def get_all_planets():
 
     return jsonify(all_planets), 200
 
-@app.route('/planets/<init:id', methods=['GET'])
+@app.route('/planets/<int:id>', methods=['GET'])
 def get_single_planet(id):
 
     planet = Planets.query.get(id)
